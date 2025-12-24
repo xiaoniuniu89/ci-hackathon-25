@@ -5,12 +5,14 @@
  * All meal values are estimated in EUR, then converted to user's local currency
  */
 
+import type { CurrencyInfo, UserLocation } from '@/types/location.types'
+
 /**
  * Currency data with conversion rates from EUR
  * Rates are approximate and can be updated periodically
  * Last updated: December 2025
  */
-const CURRENCY_DATA = {
+const CURRENCY_DATA: Record<string, Omit<CurrencyInfo, 'code'>> = {
   // US Dollar
   'USD': { symbol: '$', rate: 1.1, name: 'US Dollar' },
 
@@ -43,13 +45,13 @@ const CURRENCY_DATA = {
 
   // Danish Krone
   'DKK': { symbol: 'kr', rate: 7.45, name: 'Danish Krone' },
-};
+}
 
 /**
  * Map country codes to their primary currency
  * Used as fallback if API doesn't return currency
  */
-const COUNTRY_TO_CURRENCY = {
+const COUNTRY_TO_CURRENCY: Record<string, string> = {
   // North America
   'US': 'USD',
   'CA': 'CAD',
@@ -73,62 +75,60 @@ const COUNTRY_TO_CURRENCY = {
 
   // Asia
   'JP': 'JPY',
-};
+}
 
 /**
  * Get currency information for a country code
- * @param {string} countryCode - ISO 2-letter country code (e.g., "US", "GB")
- * @returns {{code: string, symbol: string, rate: number, name: string}}
+ * @param countryCode - ISO 2-letter country code (e.g., "US", "GB")
  */
-export function getCurrencyForCountry(countryCode) {
-  const currencyCode = COUNTRY_TO_CURRENCY[countryCode] || 'USD';
+export function getCurrencyForCountry(countryCode: string): CurrencyInfo {
+  const currencyCode = COUNTRY_TO_CURRENCY[countryCode] || 'USD'
   return {
     code: currencyCode,
     ...(CURRENCY_DATA[currencyCode] || CURRENCY_DATA['USD'])
-  };
+  }
 }
 
 /**
  * Get currency information by currency code
- * @param {string} currencyCode - Currency code (e.g., "USD", "EUR", "GBP")
- * @returns {{code: string, symbol: string, rate: number, name: string}}
+ * @param currencyCode - Currency code (e.g., "USD", "EUR", "GBP")
  */
-export function getCurrencyInfo(currencyCode) {
+export function getCurrencyInfo(currencyCode: string): CurrencyInfo {
   return {
     code: currencyCode,
     ...(CURRENCY_DATA[currencyCode] || CURRENCY_DATA['USD'])
-  };
+  }
 }
 
 /**
  * Convert EUR amount to target currency
- * @param {number} eurAmount - Amount in EUR
- * @param {string} targetCurrency - Target currency code (e.g., "USD", "GBP")
- * @returns {number} - Converted amount (rounded)
+ * @param eurAmount - Amount in EUR
+ * @param targetCurrency - Target currency code (e.g., "USD", "GBP")
+ * @returns Converted amount (rounded)
  */
-export function convertFromEUR(eurAmount, targetCurrency) {
-  const currency = CURRENCY_DATA[targetCurrency] || CURRENCY_DATA['USD'];
-  return Math.round(eurAmount * currency.rate);
+export function convertFromEUR(eurAmount: number, targetCurrency: string): number {
+  const currency = CURRENCY_DATA[targetCurrency] || CURRENCY_DATA['USD']
+  return Math.round(eurAmount * currency.rate)
 }
 
 /**
  * Format amount with currency symbol
- * @param {number} amount - Numeric amount
- * @param {string} currencyCode - Currency code (e.g., "USD", "EUR")
- * @returns {string} - Formatted string (e.g., "$10", "€8", "£7")
+ * @param amount - Numeric amount
+ * @param currencyCode - Currency code (e.g., "USD", "EUR")
+ * @returns Formatted string (e.g., "$10", "€8", "£7")
  */
-export function formatCurrency(amount, currencyCode) {
-  const currency = CURRENCY_DATA[currencyCode] || CURRENCY_DATA['USD'];
-  return `${currency.symbol}${amount}`;
+export function formatCurrency(amount: number, currencyCode: string): string {
+  const currency = CURRENCY_DATA[currencyCode] || CURRENCY_DATA['USD']
+  return `${currency.symbol}${amount}`
 }
 
 /**
  * Format amount with currency symbol from user location object
- * @param {number} amount - Numeric amount
- * @param {Object} userLocation - User location object with currency/currencySymbol
- * @returns {string} - Formatted string (e.g., "$10", "€8", "£7")
+ * @param amount - Numeric amount
+ * @param userLocation - User location object with currency/currencySymbol
+ * @returns Formatted string (e.g., "$10", "€8", "£7")
  */
-export function formatCurrencyFromLocation(amount, userLocation) {
-  const symbol = userLocation.currencySymbol || '$';
-  return `${symbol}${amount}`;
+export function formatCurrencyFromLocation(amount: number, userLocation: UserLocation): string {
+  const symbol = userLocation.currencySymbol || '$'
+  return `${symbol}${amount}`
 }
