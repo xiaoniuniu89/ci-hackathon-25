@@ -1,3 +1,2 @@
 /* Main CSS entry point - loaded in HTML to prevent FOUC */
-@import 'bootstrap/dist/css/bootstrap.min.css';
 @import './styles/global.css';

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 
 interface TeamMember {
   name: string
@@ -32,24 +33,32 @@ const teamMembers: TeamMember[] = [
 const Home: React.FC = () => {
   return (
     <>
-      <a href="#main" className="skip-link visually-hidden-focusable">Skip to main content</a>
+      <a href="#main" className="skip-link">Skip to main content</a>
       <header id="header">
-        <div className="container d-flex flex-grow-1 py-4">
-          <div className="row align-items-center flex-grow-1 w-100">
-            <div className="header-info col-12 col-md-6">
+        <div className="container mx-auto px-4 flex flex-grow py-4">
+          <div className="flex flex-wrap items-center flex-grow w-full -mx-4">
+            <div className="header-info w-full md:w-1/2 px-4">
               <h1>Discover Delicious Recipes</h1>
-              <p className="lead">Explore our collection of amazing recipes and help donate meals to those in need.</p>
-              <Link to="/recipes" className="btn btn-success btn-lg" aria-label="Visit recipes page">
-                Browse Recipes
-              </Link>
-              <Link to="/contact" className="btn btn-outline-success btn-lg ms-2" aria-label="Visit contact page">
-                Get In Touch
-              </Link>
+              <p className="text-lg text-muted-foreground my-4">
+                Explore our collection of amazing recipes and help donate meals to those in need.
+              </p>
+              <div className="flex gap-2">
+                <Button asChild size="lg" className="bg-secondary hover:bg-secondary/90">
+                  <Link to="/recipes" aria-label="Visit recipes page">
+                    Browse Recipes
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/contact" aria-label="Visit contact page">
+                    Get In Touch
+                  </Link>
+                </Button>
+              </div>
             </div>
-            <div className="header-image col-12 col-md-6 py-4">
+            <div className="w-full md:w-1/2 px-4 py-4">
               <img
                 src="/public/christmas recipe header image.webp"
-                className="img-fluid rounded"
+                className="w-full h-auto rounded-lg"
                 alt="Festive holiday meal with Christmas-themed recipes"
               />
             </div>
@@ -58,89 +67,95 @@ const Home: React.FC = () => {
       </header>
 
       <main id="main">
-        <div className="container">
-          <div className="row py-4">
-            <div className="intro-card">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-4">
+            <div className="pt-4">
               <div className="intro-cover text-center">
-                <i className="fa-solid fa-kitchen-set fa-4x" aria-hidden="true"></i>
-                <div className="card-content">
-                  <h2>Easy Recipes</h2>
+                <i className="fa-solid fa-kitchen-set fa-4x text-burgundy" aria-hidden="true"></i>
+                <div className="pt-8">
+                  <h2 className="font-script text-4xl">Easy Recipes</h2>
                   <p>Simple, step-by-step instructure for every skill level.</p>
                 </div>
               </div>
             </div>
-            <div className="intro-card">
+            <div className="pt-4">
               <div className="intro-cover text-center">
-                <i className="fa-solid fa-hand-holding-heart fa-4x" aria-hidden="true"></i>
-                <div className="card-content">
-                  <h2>Donate Meals</h2>
+                <i className="fa-solid fa-hand-holding-heart fa-4x text-burgundy" aria-hidden="true"></i>
+                <div className="pt-8">
+                  <h2 className="font-script text-4xl">Donate Meals</h2>
                   <p>Every recipe can help feed someone in need.</p>
                 </div>
               </div>
             </div>
-            <div className="intro-card">
+            <div className="pt-4">
               <div className="intro-cover text-center">
-                <i className="fa-solid fa-user-plus fa-4x" aria-hidden="true"></i>
-                <div className="card-content">
-                  <h2>Follow Us</h2>
+                <i className="fa-solid fa-user-plus fa-4x text-burgundy" aria-hidden="true"></i>
+                <div className="pt-8">
+                  <h2 className="font-script text-4xl">Follow Us</h2>
                   <p>Connect with us on social media</p>
-                  <a
-                    href="https://www.facebook.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Visit our Facebook page"
-                  >
-                    <i className="fa-brands fa-facebook-f" aria-hidden="true"></i>
-                  </a>
-                  <a
-                    href="https://x.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Visit our X page"
-                  >
-                    <i className="fa-brands fa-x-twitter" aria-hidden="true"></i>
-                  </a>
-                  <a
-                    href="https://www.instagram.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Visit our Instagram page"
-                  >
-                    <i className="fa-brands fa-instagram" aria-hidden="true"></i>
-                  </a>
+                  <div className="flex justify-center gap-3 mt-3">
+                    <a
+                      href="https://www.facebook.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit our Facebook page"
+                      className="text-burgundy hover:text-antique-gold transition-colors"
+                    >
+                      <i className="fa-brands fa-facebook-f fa-lg" aria-hidden="true"></i>
+                    </a>
+                    <a
+                      href="https://x.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit our X page"
+                      className="text-burgundy hover:text-antique-gold transition-colors"
+                    >
+                      <i className="fa-brands fa-x-twitter fa-lg" aria-hidden="true"></i>
+                    </a>
+                    <a
+                      href="https://www.instagram.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Visit our Instagram page"
+                      className="text-burgundy hover:text-antique-gold transition-colors"
+                    >
+                      <i className="fa-brands fa-instagram fa-lg" aria-hidden="true"></i>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="dev-section py-5">
-            <h2 className="text-center mb-4">Meet The Team</h2>
-            <div className="dev-cards">
+          <div className="py-5">
+            <h2 className="font-script text-4xl text-center mb-4">Meet The Team</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {teamMembers.map((member) => (
-                <div key={member.name} className="dev-card">
+                <div key={member.name} className="pt-4">
                   <div className="dev-card-content text-center">
                     <img
                       src={member.avatar}
                       alt={member.name}
-                      className="rounded-circle mb-3"
+                      className="rounded-full mb-3"
                       width="100"
                       height="100"
                     />
-                    <h3 style={{ color: 'var(--burgundy)', fontFamily: "'Source Serif 4', serif", fontWeight: 600 }}>
+                    <h3 className="text-burgundy font-serif font-semibold text-lg">
                       {member.name}
                     </h3>
-                    <p className="text-muted" style={{ fontSize: '0.9rem' }}>
+                    <p className="text-muted-foreground text-sm mt-2">
                       {member.bio}
                     </p>
-                    <a
-                      href={member.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-success btn-sm mt-2"
-                      aria-label={`Visit ${member.name.split(' ')[0]}'s Github profile`}
-                    >
-                      <i className="fab fa-github" aria-hidden="true"></i> GitHub
-                    </a>
+                    <Button asChild size="sm" className="mt-2 bg-secondary hover:bg-secondary/90">
+                      <a
+                        href={member.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Visit ${member.name.split(' ')[0]}'s Github profile`}
+                      >
+                        <i className="fab fa-github mr-2" aria-hidden="true"></i> GitHub
+                      </a>
+                    </Button>
                   </div>
                 </div>
               ))}

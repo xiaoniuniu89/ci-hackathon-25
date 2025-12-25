@@ -121,76 +121,84 @@ const RecipeDetail: React.FC = () => {
   const instructions = extractInstructions(recipe.strInstructions)
 
   return (
-    <div className="container py-5" id="recipe-detail">
-      <div className="row mb-4">
-        <div className="col">
-          <Link to="/recipes" className="btn btn-outline-success mb-3">
-            <i className="bi bi-arrow-left"></i> Back to Recipes
-          </Link>
-        </div>
+    <div className="container mx-auto px-4 py-8 max-w-7xl" id="recipe-detail">
+      <div className="mb-6">
+        <Link to="/recipes" className="inline-flex items-center gap-2 px-4 py-2 border border-green-600 text-green-600 rounded hover:bg-green-50 transition-colors">
+          <i className="bi bi-arrow-left"></i> Back to Recipes
+        </Link>
       </div>
 
-      <div className="row">
-        <div className="col-lg-8">
-          <div className="mb-4">
+      {/* Image and Donation Card Side by Side */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+        <div className="md:col-span-8">
+          <div className="border rounded-lg bg-gray-100 h-[400px] flex items-center justify-center overflow-hidden">
             <img
               src={recipe.strMealThumb}
-              className="img-fluid rounded"
+              className="rounded max-w-full max-h-full object-contain"
               alt={recipe.strMeal}
-              style={{ width: '100%', maxHeight: '400px', objectFit: 'cover' }}
             />
           </div>
-
-          <h1 className="mb-3">{recipe.strMeal}</h1>
-          <p className="lead mb-4">{recipe.strCategory} - {recipe.strArea} cuisine</p>
-
-          <div className="row mb-4">
-            <div className="col-sm-4">
-              <strong>Prep Time:</strong><br />
-              <span className="text-muted">30 mins</span>
-            </div>
-            <div className="col-sm-4">
-              <strong>Servings:</strong><br />
-              <span className="text-muted">4</span>
-            </div>
-            <div className="col-sm-4">
-              <strong>Difficulty:</strong><br />
-              <span className="text-muted">Medium</span>
-            </div>
-          </div>
-
-          <h3 className="mb-3">Ingredients</h3>
-          <ul className="list-group mb-4">
-            {ingredients.map((ingredient, index) => (
-              <li key={index} className="list-group-item">{ingredient}</li>
-            ))}
-          </ul>
-
-          <h3 className="mb-3">Instructions</h3>
-          <ol className="list-group list-group-numbered mb-4">
-            {instructions.map((instruction, index) => (
-              <li key={index} className="list-group-item">{instruction}</li>
-            ))}
-          </ol>
         </div>
 
-        <div className="col-lg-4">
-          <div className="border rounded p-4 bg-light position-sticky" style={{ top: '20px' }}>
-            <h4 className="mb-3">Help Feed Someone</h4>
-            <p className="mb-3">Your donation can provide this meal to a family in need.</p>
+        <div className="md:col-span-4">
+          <div className="border rounded-lg p-6 bg-gray-50">
+            <h4 className="text-xl font-bold mb-3">Help Feed Someone</h4>
+            <p className="mb-4">Your donation can provide this meal to a family in need.</p>
             <button
               type="button"
-              className="donate-button btn btn-success w-100"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded transition-colors mb-4"
               onClick={() => setShowCharityModal(true)}
             >
-              <i className="bi bi-heart-fill"></i>
-              {' '}Donate This Meal
+              Donate This Meal
             </button>
-            <p className="small text-muted mt-3 mb-0">
+            <p className="text-sm text-gray-600">
               Every donation helps us prepare and deliver meals to those who need them most.
             </p>
           </div>
         </div>
+      </div>
+
+      {/* All content below in single column */}
+      <div>
+        <h1 className="text-4xl font-bold mb-4">{recipe.strMeal}</h1>
+        {recipe.strInstructions && (
+          <p className="text-lg mb-6 text-gray-700">
+            {recipe.strInstructions.split('\n')[0] || `A traditional ${recipe.strArea} ${recipe.strCategory.toLowerCase()} dish.`}
+          </p>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div>
+            <strong>Prep Time:</strong> <span className="text-gray-600">30 mins</span>
+          </div>
+          <div>
+            <strong>Servings:</strong> <span className="text-gray-600">4</span>
+          </div>
+          <div>
+            <strong>Difficulty:</strong> <span className="text-gray-600">Medium</span>
+          </div>
+        </div>
+
+        <h3 className="text-2xl font-bold mb-4">Ingredients</h3>
+        <ul className="border rounded-lg mb-8 divide-y">
+          {ingredients.map((ingredient, index) => (
+            <li key={index} className="px-4 py-3">
+              {ingredient}
+            </li>
+          ))}
+        </ul>
+
+        <h3 className="text-2xl font-bold mb-4">Instructions</h3>
+        <ol className="border rounded-lg mb-8 divide-y">
+          {instructions.map((instruction, index) => (
+            <li key={index} className="px-4 py-4 relative pl-12">
+              <span className="absolute left-4 font-bold">
+                {index + 1}.
+              </span>
+              {instruction}
+            </li>
+          ))}
+        </ol>
       </div>
 
       <CharityModal

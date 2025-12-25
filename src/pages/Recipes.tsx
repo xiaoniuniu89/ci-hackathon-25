@@ -191,8 +191,8 @@ const Recipes: React.FC = () => {
   const hasMore = displayedRecipes.length < allRecipes.length
 
   return (
-    <div className="container py-5">
-      <h1 className="mb-4">Recipes</h1>
+    <div className="container mx-auto px-4 py-5">
+      <h1 className="font-script text-5xl mb-4">Recipes</h1>
       <RecipeFilters
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}

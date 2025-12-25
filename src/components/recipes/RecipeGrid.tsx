@@ -1,5 +1,8 @@
 import React from 'react'
 import RecipeCard from './RecipeCard'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2 } from 'lucide-react'
 import type { Meal } from '@/types/recipe.types'
 
 interface RecipeGridProps {
@@ -21,27 +24,24 @@ const RecipeGrid: React.FC<RecipeGridProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="row">
-        <div className="col-12">
-          <p>Loading recipes...</p>
-        </div>
+      <div className="flex justify-center items-center py-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Loading recipes...</span>
       </div>
     )
   }
 
   if (recipes.length === 0) {
     return (
-      <div className="row">
-        <div className="col-12">
-          <div className="alert alert-info">No recipes found. Try a different search!</div>
-        </div>
-      </div>
+      <Alert>
+        <AlertDescription>No recipes found. Try a different search!</AlertDescription>
+      </Alert>
     )
   }
 
   return (
     <>
-      <div className="row" id="recipe-list">
+      <div className="flex flex-wrap -mx-4" id="recipe-list">
         {recipes.map(meal => (
           <RecipeCard
             key={meal.idMeal}
@@ -52,12 +52,14 @@ const RecipeGrid: React.FC<RecipeGridProps> = ({
         ))}
       </div>
       {hasMore && (
-        <div className="row mt-4" id="load-more-container">
-          <div className="col-12 text-center">
-            <button className="btn btn-success" id="load-more-btn" onClick={onLoadMore}>
-              Load More Recipes
-            </button>
-          </div>
+        <div className="mt-4 text-center" id="load-more-container">
+          <Button
+            id="load-more-btn"
+            onClick={onLoadMore}
+            className="bg-secondary hover:bg-secondary/90"
+          >
+            Load More Recipes
+          </Button>
         </div>
       )}
     </>

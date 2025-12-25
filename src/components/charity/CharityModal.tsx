@@ -1,8 +1,18 @@
 import React, { useState } from 'react'
-import { Modal, Button } from 'react-bootstrap'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import CharityCard from './CharityCard'
 import { getDonationUrl, getFoodCharityProjects } from '@/services/globalgiving'
 import { formatCurrencyFromLocation } from '@/services/currency'
+import { Loader2, Heart, Gift, Info } from 'lucide-react'
 import type { CharityProject } from '@/types/charity.types'
 import type { Meal } from '@/types/recipe.types'
 import type { UserLocation } from '@/types/location.types'
@@ -77,24 +87,31 @@ const CharityModal: React.FC<CharityModalProps> = ({
 
   if (!projects || projects.length === 0) {
     return (
-      <Modal show={show} onHide={handleClose} size="lg" centered>
-        <Modal.Header closeButton className="charity-modal-header">
-          <Modal.Title>
-            <i className="bi bi-heart-fill"></i> Choose a Charity
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div className="alert alert-info">
-            <i className="bi bi-info-circle"></i>
-            {' '}Unable to load charity projects at this time.
-            Please visit{' '}
-            <a href="https://www.globalgiving.org/search/?size=25&nextPage=1&sortField=sortorder&selectedCountries=&loadAllResults=true&theme=food" target="_blank" rel="noopener noreferrer">
-              GlobalGiving
-            </a>
-            {' '}to find food security projects to support.
-          </div>
-        </Modal.Body>
-      </Modal>
+      <Dialog open={show} onOpenChange={handleClose}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Heart className="h-5 w-5 fill-current" /> Choose a Charity
+            </DialogTitle>
+          </DialogHeader>
+          <Alert>
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Unable to load charity projects at this time.
+              Please visit{' '}
+              <a
+                href="https://www.globalgiving.org/search/?size=25&nextPage=1&sortField=sortorder&selectedCountries=&loadAllResults=true&theme=food"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline"
+              >
+                GlobalGiving
+              </a>
+              {' '}to find food security projects to support.
+            </AlertDescription>
+          </Alert>
+        </DialogContent>
+      </Dialog>
     )
   }
 
@@ -107,24 +124,25 @@ const CharityModal: React.FC<CharityModalProps> = ({
   const hasMore = nextStart < totalFound
 
   return (
-    <Modal show={show} onHide={handleClose} size="xl" centered scrollable className="charity-modal">
-      <Modal.Header closeButton className="charity-modal-header">
-        <Modal.Title>
-          <i className="bi bi-heart-fill"></i> Donate the Cost of Your Meal
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <p className="text-muted mb-4">
-          {mealDescription && (
-            <>
-              {mealDescription}
-              {' '}
-            </>
-          )}
-          Select a food/hunger charity to donate <strong>{formattedAmount}</strong> to. These projects are fighting hunger and food insecurity around the world.
-          Your contribution makes a real difference!
-        </p>
-        <div className="row g-3" id="charityProjectsContainer">
+    <Dialog open={show} onOpenChange={handleClose}>
+      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Heart className="h-5 w-5 fill-current" /> Donate the Cost of Your Meal
+          </DialogTitle>
+          <DialogDescription className="text-muted-foreground">
+            {mealDescription && (
+              <>
+                {mealDescription}
+                {' '}
+              </>
+            )}
+            Select a food/hunger charity to donate <strong>{formattedAmount}</strong> to. These projects are fighting hunger and food insecurity around the world.
+            Your contribution makes a real difference!
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="charityProjectsContainer">
           {projects.map(project => (
             <CharityCard
               key={project.id}
@@ -134,35 +152,43 @@ const CharityModal: React.FC<CharityModalProps> = ({
             />
           ))}
         </div>
-      </Modal.Body>
-      <Modal.Footer>
-        <small className="text-muted me-auto">
-          Powered by <a href="https://www.globalgiving.org" target="_blank" rel="noopener noreferrer">GlobalGiving</a>
-        </small>
-        {hasMore && (
-          <Button
-            variant="outline-success"
-            onClick={handleLoadMore}
-            disabled={isLoadingMore}
-          >
-            {isLoadingMore ? (
-              <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Loading...
-              </>
-            ) : (
-              'Load More'
+
+        <DialogFooter className="flex-col sm:flex-row gap-2 items-center">
+          <small className="text-muted-foreground flex-1">
+            Powered by <a href="https://www.globalgiving.org" target="_blank" rel="noopener noreferrer" className="underline">GlobalGiving</a>
+          </small>
+          <div className="flex gap-2">
+            {hasMore && (
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Load More'
+                )}
+              </Button>
             )}
-          </Button>
-        )}
-        <Button variant="success" onClick={handleDonate} disabled={!selectedProjectId}>
-          <i className="bi bi-gift-fill"></i> Donate
-        </Button>
-        <Button variant="outline-secondary" onClick={handleClose}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+            <Button
+              variant="default"
+              onClick={handleDonate}
+              disabled={!selectedProjectId}
+              className="bg-secondary hover:bg-secondary/90"
+            >
+              <Gift className="mr-2 h-4 w-4 fill-current" /> Donate
+            </Button>
+            <Button variant="outline" onClick={handleClose}>
+              Close
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   )
 }
 

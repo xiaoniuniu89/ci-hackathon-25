@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { z } from 'zod'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
 
 const contactSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -30,7 +35,6 @@ const Contact: React.FC = () => {
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
-    // Initialize Pageclip when component mounts
     if (formRef.current && window.Pageclip) {
       window.Pageclip.form(formRef.current, {
         onResponse: function(error: any, response: any) {
@@ -39,7 +43,6 @@ const Contact: React.FC = () => {
             setIsSubmitting(false)
           } else {
             console.log('Form submitted successfully:', response)
-            // Reset form on success
             setFormData({ name: '', email: '', subject: '', message: '' })
             setIsSubmitting(false)
             alert('Message sent successfully!')
@@ -52,20 +55,16 @@ const Contact: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    // Clear error for this field
     setErrors(prev => ({ ...prev, [name]: '' }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-    // Clear previous errors
     setErrors({})
 
     try {
       contactSchema.parse(formData)
-      // Validation passed - allow form to proceed to Pageclip
       setIsSubmitting(true)
     } catch (error) {
-      // Validation failed - prevent submission and show errors
       e.preventDefault()
       e.stopPropagation()
 
@@ -83,104 +82,110 @@ const Contact: React.FC = () => {
 
   return (
     <main id="main-contact">
-      <div className="container">
-        <div className="row d-flex justify-content-center py-5">
-          <div className="col-12 col-md-8 col-lg-7 px-0 mt-5">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center py-5">
+          <div className="w-full md:w-2/3 lg:w-7/12 px-0 mt-5">
             <h1 id="contact-heading">Contact Us</h1>
-            <p className="lead">Have questions or suggestions? We'd love to hear from you!</p>
+            <p className="text-lg text-muted-foreground">Have questions or suggestions? We'd love to hear from you!</p>
           </div>
-          <div className="card col-12 col-md-8 col-lg-7 mt-4 px-0 bg-light">
-            <form
-              ref={formRef}
-              id="contactForm"
-              action="https://send.pageclip.co/GAVsB8wSZedopsbpaTpWQHQeMcrmpG1E"
-              className="pageclip-form p-4"
-              method="post"
-              aria-labelledby="contact-heading"
-              onSubmit={handleSubmit}
-            >
-              <div className="mb-4">
-                <label htmlFor="name">Name</label>
-                <input
-                  id="name"
-                  name="name"
-                  className="form-control mt-2"
-                  type="text"
-                  placeholder="Enter your name"
-                  aria-describedby="name-error"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.name && (
-                  <span id="name-error" className="text-danger small" role="alert" aria-live="assertive">
-                    {errors.name}
-                  </span>
-                )}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="email">Email Address</label>
-                <input
-                  className="form-control mt-2"
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Enter your email"
-                  aria-describedby="email-error"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.email && (
-                  <span id="email-error" className="text-danger small" role="alert" aria-live="assertive">
-                    {errors.email}
-                  </span>
-                )}
-                <span className="form-text">We'll never share your email with anyone else.</span>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="subject">Subject</label>
-                <input
-                  className="form-control mt-2"
-                  type="text"
-                  name="subject"
-                  id="subject"
-                  placeholder="What is this about?"
-                  aria-describedby="subject-error"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.subject && (
-                  <span id="subject-error" className="text-danger small" role="alert" aria-live="assertive">
-                    {errors.subject}
-                  </span>
-                )}
-              </div>
-              <div className="mb-4">
-                <label htmlFor="message">Message</label>
-                <textarea
-                  className="form-control mt-2"
-                  rows={7}
-                  name="message"
-                  id="message"
-                  placeholder="Your message..."
-                  aria-describedby="message-error"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                />
-                {errors.message && (
-                  <span id="message-error" className="text-danger small" role="alert" aria-live="assertive">
-                    {errors.message}
-                  </span>
-                )}
-              </div>
-              <button type="submit" className="btn btn-success pageclip-form__submit mb-4" disabled={isSubmitting}>
-                <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
-              </button>
-            </form>
-          </div>
+          <Card className="w-full md:w-2/3 lg:w-7/12 mt-4 bg-muted">
+            <CardContent className="p-4">
+              <form
+                ref={formRef}
+                id="contactForm"
+                action="https://send.pageclip.co/GAVsB8wSZedopsbpaTpWQHQeMcrmpG1E"
+                className="pageclip-form"
+                method="post"
+                aria-labelledby="contact-heading"
+                onSubmit={handleSubmit}
+              >
+                <div className="mb-4">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Enter your name"
+                    aria-describedby="name-error"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="mt-2"
+                  />
+                  {errors.name && (
+                    <span id="name-error" className="text-destructive text-sm" role="alert" aria-live="assertive">
+                      {errors.name}
+                    </span>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    type="email"
+                    name="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    aria-describedby="email-error"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="mt-2"
+                  />
+                  {errors.email && (
+                    <span id="email-error" className="text-destructive text-sm" role="alert" aria-live="assertive">
+                      {errors.email}
+                    </span>
+                  )}
+                  <span className="text-sm text-muted-foreground">We'll never share your email with anyone else.</span>
+                </div>
+                <div className="mb-4">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Input
+                    type="text"
+                    name="subject"
+                    id="subject"
+                    placeholder="What is this about?"
+                    aria-describedby="subject-error"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="mt-2"
+                  />
+                  {errors.subject && (
+                    <span id="subject-error" className="text-destructive text-sm" role="alert" aria-live="assertive">
+                      {errors.subject}
+                    </span>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    rows={7}
+                    name="message"
+                    id="message"
+                    placeholder="Your message..."
+                    aria-describedby="message-error"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    className="mt-2"
+                  />
+                  {errors.message && (
+                    <span id="message-error" className="text-destructive text-sm" role="alert" aria-live="assertive">
+                      {errors.message}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  type="submit"
+                  className="mb-4 bg-secondary hover:bg-secondary/90"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </main>

@@ -1,4 +1,9 @@
 import React from 'react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
 
 interface RecipeFiltersProps {
   searchTerm: string
@@ -26,61 +31,55 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({
   searchPlaceholder
 }) => {
   return (
-    <div className="row mb-4">
-      <div className="col-12">
-        <div className="card bg-light">
-          <div className="card-body">
-            <div className="row g-3">
-              <div className="col-md-6">
-                <label htmlFor="search-input" className="form-label">Search Recipes</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="search-input"
-                  placeholder={searchPlaceholder}
-                  value={searchTerm}
-                  onChange={onSearchChange}
-                />
-              </div>
-              <div className="col-md-3">
-                <label htmlFor="category-filter" className="form-label">Category</label>
-                <select
-                  className="form-select"
-                  id="category-filter"
-                  value={currentCategory}
-                  onChange={(e) => onCategoryChange(e.target.value)}
-                >
-                  <option value="">All Categories</option>
-                  {categories.map(category => (
-                    <option key={category} value={category}>{category}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-md-3">
-                <label htmlFor="area-filter" className="form-label">Cuisine</label>
-                <select
-                  className="form-select"
-                  id="area-filter"
-                  value={currentArea}
-                  onChange={(e) => onAreaChange(e.target.value)}
-                >
-                  <option value="">All Cuisines</option>
-                  {areas.map(area => (
-                    <option key={area} value={area}>{area}</option>
-                  ))}
-                </select>
-              </div>
+    <div className="mb-4">
+      <Card className="bg-muted">
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+            <div className="md:col-span-6">
+              <Label htmlFor="search-input">Search Recipes</Label>
+              <Input
+                type="text"
+                id="search-input"
+                placeholder={searchPlaceholder}
+                value={searchTerm}
+                onChange={onSearchChange}
+                className="mt-1"
+              />
             </div>
-            <div className="row mt-3">
-              <div className="col-12">
-                <button className="btn btn-outline-secondary" onClick={onReset}>
-                  Reset Filters
-                </button>
-              </div>
+            <div className="md:col-span-3">
+              <Label htmlFor="category-filter">Category</Label>
+              <Select value={currentCategory || undefined} onValueChange={onCategoryChange}>
+                <SelectTrigger id="category-filter" className="mt-1">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="md:col-span-3">
+              <Label htmlFor="area-filter">Cuisine</Label>
+              <Select value={currentArea || undefined} onValueChange={onAreaChange}>
+                <SelectTrigger id="area-filter" className="mt-1">
+                  <SelectValue placeholder="All Cuisines" />
+                </SelectTrigger>
+                <SelectContent>
+                  {areas.map(area => (
+                    <SelectItem key={area} value={area}>{area}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </div>
-      </div>
+          <div className="mt-3">
+            <Button variant="outline" onClick={onReset}>
+              Reset Filters
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

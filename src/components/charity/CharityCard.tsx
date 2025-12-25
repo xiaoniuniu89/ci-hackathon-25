@@ -1,4 +1,6 @@
 import React from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Building, MapPin } from 'lucide-react'
 import type { CharityProject } from '@/types/charity.types'
 
 interface CharityCardProps {
@@ -24,26 +26,15 @@ const CharityCard: React.FC<CharityCardProps> = ({ project, isSelected, onSelect
   const progressPercentage = goal > 0 ? Math.round((funding / goal) * 100) : 0
   const location = country || _sourceCountry || 'Unknown'
 
-  // Try to get a better quality image from the image object
   let projectImage = imageLink
   if (image && image.imagelink && Array.isArray(image.imagelink)) {
     const originalImage = image.imagelink.find(link => link.size === 'original')
     projectImage = originalImage?.url || imageLink
   }
 
-  // Truncate summary to 150 characters
   const truncatedSummary = summary && summary.length > 150
     ? summary.substring(0, 150) + '...'
     : summary || 'Support this important cause'
-
-  const cardStyle: React.CSSProperties = {
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    border: isSelected ? '3px solid #198754' : '',
-    backgroundColor: isSelected ? '#f8f9fa' : '',
-    transform: isSelected ? 'translateY(-4px)' : '',
-    boxShadow: isSelected ? '0 0.5rem 1rem rgba(0,0,0,0.15)' : ''
-  }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -53,56 +44,62 @@ const CharityCard: React.FC<CharityCardProps> = ({ project, isSelected, onSelect
   }
 
   return (
-    <div className="col-md-6 col-lg-4">
-      <div
-        className={`card charity-project-card h-100 shadow-sm ${isSelected ? 'selected' : ''}`}
-        data-project-id={id}
-        style={cardStyle}
-        role="button"
-        tabIndex={0}
-        onClick={() => onSelect(id, title)}
-        onKeyDown={handleKeyDown}
-      >
-        {projectImage && (
-          <img
-            src={projectImage}
-            className="card-img-top charity-project-image"
-            alt={title}
-            style={{ height: '200px', objectFit: 'cover' }}
-          />
-        )}
-        <div className="card-body d-flex flex-column">
-          <h6 className="card-title charity-project-title">{title}</h6>
-          <p className="text-muted mb-2">
-            <small>
-              <i className="bi bi-building"></i> {organization.name || 'Organization'}
-              <br />
-              <i className="bi bi-geo-alt"></i> {location}
-            </small>
-          </p>
-          <p className="card-text charity-project-summary flex-grow-1">{truncatedSummary}</p>
-
-          {goal > 0 && (
-            <div className="mb-2">
-              <div className="progress" style={{ height: '6px' }}>
-                <div
-                  className="progress-bar bg-success"
-                  role="progressbar"
-                  style={{ width: `${progressPercentage}%` }}
-                  aria-valuenow={progressPercentage}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                ></div>
-              </div>
-              <div className="d-flex justify-content-between mt-1">
-                <small className="text-muted">{progressPercentage}% funded</small>
-                <small className="text-muted">${funding.toLocaleString()} / ${goal.toLocaleString()}</small>
-              </div>
-            </div>
-          )}
+    <Card
+      className={`cursor-pointer transition-all duration-200 ${
+        isSelected
+          ? 'border-secondary border-[3px] bg-muted -translate-y-1 shadow-lg'
+          : 'hover:shadow-md'
+      }`}
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelect(id, title)}
+      onKeyDown={handleKeyDown}
+    >
+      {projectImage && (
+        <img
+          src={projectImage}
+          className="w-full h-[200px] object-cover rounded-t-lg"
+          alt={title}
+        />
+      )}
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base">{title}</CardTitle>
+        <div className="text-muted-foreground text-sm space-y-1">
+          <div className="flex items-center gap-1">
+            <Building className="h-3 w-3" />
+            <span>{organization.name || 'Organization'}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <MapPin className="h-3 w-3" />
+            <span>{location}</span>
+          </div>
         </div>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-sm flex-grow">{truncatedSummary}</p>
+
+        {goal > 0 && (
+          <div>
+            <div className="w-full bg-secondary/20 rounded-full h-1.5">
+              <div
+                className="bg-secondary h-1.5 rounded-full transition-all"
+                style={{ width: `${progressPercentage}%` }}
+                role="progressbar"
+                aria-valuenow={progressPercentage}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              />
+            </div>
+            <div className="flex justify-between mt-1">
+              <small className="text-muted-foreground text-xs">{progressPercentage}% funded</small>
+              <small className="text-muted-foreground text-xs">
+                ${funding.toLocaleString()} / ${goal.toLocaleString()}
+              </small>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   )
 }
 
